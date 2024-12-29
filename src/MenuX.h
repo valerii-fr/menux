@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MENUX_H
+#define MENUX_H
 
 #include <Arduino.h>
 #include <Button2.h>
