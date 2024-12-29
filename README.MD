@@ -1,18 +1,18 @@
-##MenuX
+## MenuX
 MenuX is a lightweight and flexible menu library for TFT_eSPI-based projects. It provides a simple way to create interactive menus with support for scrolling, infinite nesting, and callbacks for each menu item. Perfect for embedded projects with TFT displays.
 
-###Features
+### Features
 + Simple interface to create menus and navigate between items.
 + Supports infinite nesting of submenus.
 + Scrollable menus to handle large item lists.
 + Customizable callbacks for menu items (e.g., actions or transitions).
 + Compatible with TFT_eSPI for easy integration into your display-based projects.
-###Installation
+### Installation
 To install the library, follow these steps:
 + Download or clone the repository.
 + Copy the MenuX folder to your Arduino libraries folder.
 + In the Arduino IDE, navigate to Sketch > Include Library > Manage Libraries and search for MenuX to install the library.
-###Usage
+### Usage
 Include the library in your project:
 
 ```
@@ -36,11 +36,11 @@ Call the menu.loop() method in the main loop to process button events and naviga
 void loop() {
     menu.loop();
 }
-
+```
 Use the buttons to navigate up/down and select menu items.
+
 ```
 #include <MenuX.h>
-
 Button2 btn1, btn2;
 TFT_eSPI tft = TFT_eSPI();
 
@@ -64,5 +64,6 @@ void loop() {
     menu.loop();
 }
 ```
-License
+### License
+
 >This library is released under the MIT License.
