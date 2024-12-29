@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "new": "cpp",
+        "thread": "cpp"
+    }
+}
