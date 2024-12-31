@@ -15,8 +15,8 @@ Menu::Menu(
     itemCount(itemCount), 
     currentSelection(0), 
     prevSelection(0),
-    menuContext(new MenuContext{items, itemCount, "", ""}),
-    menuFlow(*menuContext)
+    menuContext(menuContext),
+    menuFlow(menuContext)
 {
     this->currentMenuItems = items;
     this->currentMenuItemCount = itemCount;
@@ -25,19 +25,23 @@ Menu::Menu(
     }
 }
 
-Menu::~Menu() {
-    if (menuContext != nullptr) {
-        delete menuContext;
-        menuContext = nullptr;
-    }
-}
-
 Flow<Menu::MenuContext>& Menu::getMenuFlow() {
     return menuFlow;
 }
 
+void Menu::updateMenuContext() {
+    MenuContext context = { 
+        currentMenuItems, 
+        currentMenuItemCount, 
+        currentMenuItems[currentSelection].label, 
+        currentMenuItems[currentSelection].description, 
+        currentSubmenuTitle 
+    };
+    menuContext = context;
+}
+
 void Menu::publishMenuContext() {
-    menuFlow.setState(*menuContext);
+    menuFlow.setState(menuContext);
 }
 
 void Menu::begin() {
@@ -60,6 +64,9 @@ void Menu::begin() {
     tft.setTextSize(MENU_FONT_SIZE);
     tft.setTextFont(MENU_FONT);
     tft.setTextDatum(TL_DATUM);
+    
+    updateMenuContext();
+    publishMenuContext();
     clearMenuField();
     drawMenu();
 }
@@ -75,7 +82,7 @@ void Menu::navigateUp() {
         if (currentSelection < scrollOffset) {
             scrollOffset = currentSelection;
         }
-
+        updateMenuContext();
         publishMenuContext();
         drawMenu();
     }
@@ -94,7 +101,7 @@ void Menu::navigateDown() {
         if (currentSelection >= scrollOffset + visibleItemCount) {
             scrollOffset = currentSelection - visibleItemCount + 1;
         }
-
+        updateMenuContext();
         publishMenuContext();
         drawMenu();
     }
@@ -114,6 +121,7 @@ void Menu::select() {
         *items = selectedItem.submenu;
         itemCount = selectedItem.submenuItemCount;
         currentItemIndex = 0;
+        updateMenuContext();
         publishMenuContext();
     } else if (selectedItem.action != nullptr) {
         selectedItem.action();
@@ -132,7 +140,7 @@ void Menu::handleButtonLongPress() {
                 currentMenuItems[currentSelection].description, 
                 currentSubmenuTitle 
             };
-            menuContext = &context;
+            menuContext = context;
             menuStack.push(context);
             
             currentMenuItems = selectedItem->submenu;
@@ -141,6 +149,7 @@ void Menu::handleButtonLongPress() {
             currentSubmenuTitle = selectedItem->label;
 
             clearMenuField();
+            updateMenuContext();
             publishMenuContext();
             drawMenu();
         }
@@ -170,7 +179,7 @@ void Menu::transitionToInteractor() {
         currentMenuItems[currentSelection].description, 
         currentSubmenuTitle 
     };
-    menuContext = &context;
+    menuContext = context;
     menuStack.push(context);
     isMenuActive = false;
     clearMenuField();
@@ -180,7 +189,7 @@ void Menu::transitionToInteractor() {
 void Menu::returnToMenu() {
     if (!menuStack.empty()) {
         MenuContext previousContext = menuStack.top();
-        menuContext = &previousContext;
+        menuContext = previousContext;
         menuStack.pop();
         currentMenuItems = previousContext.menuItems;
         currentMenuItemCount = previousContext.menuItemCount;

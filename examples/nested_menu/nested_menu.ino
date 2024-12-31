@@ -71,7 +71,6 @@ void setup() {
     tft.setTextSize(1);
     tft.setSwapBytes(true);
 
-    menu.begin();
 
     // set up callback for menu context changes
     menu.getMenuFlow().subscribe([](const Menu::MenuContext& context){
@@ -80,6 +79,7 @@ void setup() {
         Serial.print(", Action=");
         Serial.println(context.currentItemAction);
     });
+    menu.begin();
 }
 
 void loop() {

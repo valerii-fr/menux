@@ -61,7 +61,6 @@ public:
         int itemCount,
         int *offsetY
     );
-    ~Menu();
 
     struct MenuContext {
         MenuItem* menuItems;                // Menu items pointers
@@ -90,7 +89,7 @@ private:
     MenuItem *currentMenuItems;
     String currentSubmenuTitle;
     std::stack<MenuContext> menuStack;
-    MenuContext* menuContext;
+    MenuContext menuContext = MenuContext{*items, itemCount, "", ""};
     Flow<MenuContext> menuFlow;
     int scrollOffset = 0;
     int currentMenuItemCount;
@@ -109,6 +108,7 @@ private:
     void disableButtons();
     void enableButtons();
     void publishMenuContext();
+    void updateMenuContext();
 };
 
 #endif
